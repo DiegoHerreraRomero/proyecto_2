@@ -1,8 +1,13 @@
-import React from 'react'
-import { BrowserRouter as Router, Switch, Route, NavLink } from 'react-router-dom'
-import EpisodesTable from '../../components/Episodes/Table'
-import CharactersTable from '../../components/Characters/Table'
+import React, { useContext } from 'react'
+import { BrowserRouter as Router, Switch, Route, NavLink, Redirect } from 'react-router-dom'
+import EpisodesTable from '../Episodes/Table'
+import CharactersTable from '../Characters/Table'
+import UserLogin from '../Users/Login'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
+import {
+  UserContext,
+  logout as LogoutDispatch
+} from '../../contexts/User'
 
 const Homepage = () => {
   return (
@@ -11,35 +16,61 @@ const Homepage = () => {
 }
 
 function Template (props) {
-  const { currentUser } = props
+  const { state, dispatch } = useContext(UserContext)
+  const { userLogged } = state
+
+  const SignOut = () => {
+    dispatch(LogoutDispatch())
+    return (
+      <Redirect to='/login' />
+    )
+  }
+
   return (
     <Router>
       <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
         <Navbar.Brand href='#home'>React-Bootstrap</Navbar.Brand>
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
         <Navbar.Collapse id='responsive-navbar-nav'>
-          <Nav className='mr-auto'>
-            <NavLink exact to='/' className='nav-link'>Home</NavLink>
-            <NavLink exact to='/episodes' className='nav-link'>Episodes</NavLink>
-            <NavLink exact to='/characters' className='nav-link'>Characters</NavLink>
-          </Nav>
+          {userLogged !== null && (
+            <Nav className='mr-auto'>
+              <NavLink exact to='/' className='nav-link'>Home</NavLink>
+              <NavLink exact to='/episodes' className='nav-link'>Episodes</NavLink>
+              <NavLink exact to='/characters' className='nav-link'>Characters</NavLink>
+            </Nav>
+          )}
+          {userLogged === null && (
+            <Nav className='mr-auto'>
+              <NavLink exact to='/' className='nav-link'>Home</NavLink>
+            </Nav>
+          )}
           <Nav>
-            <NavDropdown alignRight title={currentUser.email} id='user-dropdown'>
-              <NavLink exact to='/my_account' className='dropdown-item'>My Account</NavLink>
-              <NavDropdown.Divider />
-              <NavLink exact to='/sign_out' className='dropdown-item'>Sign Out</NavLink>
-            </NavDropdown>
+            {userLogged !== null && (
+              <NavDropdown alignRight title={userLogged.email} id='user-dropdown'>
+                <NavLink exact to='/my_account' className='dropdown-item'>My Account</NavLink>
+                <NavDropdown.Divider />
+                <NavLink exact to='/sign_out' className='dropdown-item'>Sign Out</NavLink>
+              </NavDropdown>
+            )}
+            {userLogged === null && (
+              <NavDropdown alignRight title='User' id='user-dropdown'>
+                <NavLink exact to='/login' className='dropdown-item'>Login</NavLink>
+                <NavLink exact to='/register' className='dropdown-item'>Register</NavLink>
+              </NavDropdown>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Navbar>
 
-      <Switch>
-        <Container>
+      <Container>
+        <Switch>
           <Route exact path='/' component={Homepage} />
           <Route exact path='/episodes' component={EpisodesTable} />
           <Route exact path='/characters' component={CharactersTable} />
-        </Container>
-      </Switch>
+          <Route exact path='/login' component={UserLogin} />
+          <Route exact path='/sign_out' component={SignOut} />
+        </Switch>
+      </Container>
     </Router>
   )
 }

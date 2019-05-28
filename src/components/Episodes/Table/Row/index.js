@@ -8,9 +8,16 @@ export default function EpisodesTableRow (props) {
       <td>{airDate}</td>
       <td>{episode}</td>
       <td>
-        <div title='Mark as Favorite'>
-          <span role='img' aria-label='Mark as Favorite'>&#128150;</span>
-        </div>
+        {!props.isFavorite && (
+          <div title='Mark as Favorite'>
+            <span role='img' aria-label='Mark as Favorite' className='h2'>&#128150;</span>
+          </div>
+        )}
+        {props.isFavorite && (
+          <div title='Remove from Favorite'>
+            <span role='img' aria-label='Mark as Favorite'>&#128148;</span>
+          </div>
+        )}
       </td>
     </tr>
   )
