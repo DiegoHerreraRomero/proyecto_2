@@ -55,11 +55,9 @@ export default function EpisodesTable (props) {
             </thead>
             <tbody>
               {episodes.map(episode => {
-                const isFavorite = false
                 return <EpisodesTableRow
                   key={episode.id}
                   episode={episode}
-                  isFavorite={isFavorite}
                 />
               })}
             </tbody>

@@ -1,10 +1,10 @@
 import React, { useContext, useState } from 'react'
 import { Jumbotron, Form, Button } from 'react-bootstrap'
-import { BrowserRouter as Router, Redirect } from 'react-router-dom'
 import {
   UserContext,
   login as LoginDispatch
 } from '../../../contexts/User'
+import IsLoggedIn from './IsLoggedIn'
 
 export default function UserLogin () {
   const { state, dispatch } = useContext(UserContext)
@@ -19,19 +19,12 @@ export default function UserLogin () {
 
   const submitLogin = e => {
     e.preventDefault()
-    dispatch(LoginDispatch(tempUser.email, tempUser.password))
-    return (
-      <Router>
-        <Redirect to='/' />
-      </Router>
-    )
+    dispatch(LoginDispatch(tempUser))
   }
-
-
-  console.log(tempUser)
 
   return (
     <Jumbotron>
+      <IsLoggedIn />
       <Form onSubmit={submitLogin}>
         <Form.Group controlId='email'>
           <Form.Label>Email address</Form.Label>

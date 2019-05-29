@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { BrowserRouter as Router, Switch, Route, NavLink, Redirect } from 'react-router-dom'
 import EpisodesTable from '../Episodes/Table'
 import CharactersTable from '../Characters/Table'
+import MatchPeople from '../Users/MatchPeople'
 import UserLogin from '../Users/Login'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import {
@@ -37,6 +38,7 @@ function Template (props) {
               <NavLink exact to='/' className='nav-link'>Home</NavLink>
               <NavLink exact to='/episodes' className='nav-link'>Episodes</NavLink>
               <NavLink exact to='/characters' className='nav-link'>Characters</NavLink>
+              <NavLink exact to='/match_people' className='nav-link'>Match People</NavLink>
             </Nav>
           )}
           {userLogged === null && (
@@ -67,6 +69,7 @@ function Template (props) {
           <Route exact path='/' component={Homepage} />
           <Route exact path='/episodes' component={EpisodesTable} />
           <Route exact path='/characters' component={CharactersTable} />
+          <Route exact path='/match_people' component={MatchPeople} />
           <Route exact path='/login' component={UserLogin} />
           <Route exact path='/sign_out' component={SignOut} />
         </Switch>
