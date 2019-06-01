@@ -1,21 +1,22 @@
 import React, { useContext, useState } from 'react'
-import { Jumbotron, Form, Button } from 'react-bootstrap'
+import { Jumbotron, Form, Button, Alert } from 'react-bootstrap'
 import {
   UserContext,
-  register as RegisterDispatch
+  updateUser as UpdateUserDispatch
 } from '../../../contexts/User'
 
 const defaultTempUser = {
-  email: '',
+  currentPassword: '',
   password: '',
   passwordConfirm: ''
 }
 
-export default function UserLogin () {
+export default function MyAccount () {
   const { state, dispatch } = useContext(UserContext)
-  const { users } = state
+  const { userLogged } = state
   const [ tempUser, setTempUser ] = useState(defaultTempUser)
   const [ errors, setErrors ] = useState({})
+  const [ save, setSave ] = useState(null)
 
   const updateTempUser = e => {
     setTempUser({
@@ -24,26 +25,26 @@ export default function UserLogin () {
     })
   }
 
-  const submitRegister = e => {
+  const submitUpdate = e => {
     e.preventDefault()
     let newErrors = {}
     let valid = true
-    if (tempUser.email === '') {
+    if (tempUser.currentPassword === '') {
       newErrors = {
         ...newErrors,
-        email: 'Should not be blank'
+        currentPassword: 'Should not be blank'
       }
       valid = false
-    } else if (users !== undefined && users.filter(u => u.email === tempUser.email).length > 0) {
+    } else if (userLogged.password !== tempUser.currentPassword) {
       newErrors = {
         ...newErrors,
-        email: 'Already exist'
+        currentPassword: 'Wrong current password'
       }
       valid = false
     } else {
       newErrors = {
         ...newErrors,
-        email: null
+        currentPassword: null
       }
     }
     if (tempUser.password === '') {
@@ -77,7 +78,10 @@ export default function UserLogin () {
       }
     }
     if (valid) {
-      dispatch(RegisterDispatch(tempUser))
+      dispatch(UpdateUserDispatch(tempUser))
+      setTempUser(defaultTempUser)
+      setErrors({})
+      setSave('success')
     } else {
       setErrors(newErrors)
     }
@@ -85,13 +89,14 @@ export default function UserLogin () {
 
   return (
     <Jumbotron>
-      <Form onSubmit={submitRegister}>
-        <Form.Group controlId='email'>
-          <Form.Label>Email address</Form.Label>
-          <Form.Control type='email' name='email' placeholder='Enter email' onChange={updateTempUser} value={tempUser.email} />
-          {errors.email && (
+      {save && (<Alert variant={save}>Correctly saved</Alert>)}
+      <Form onSubmit={submitUpdate}>
+        <Form.Group controlId='currentPassword'>
+          <Form.Label>Current Password</Form.Label>
+          <Form.Control type='password' name='currentPassword' placeholder='Current Password' onChange={updateTempUser} value={tempUser.currentPassword} />
+          {errors.currentPassword && (
             <Form.Text className='text-muted'>
-              <p className='text-danger'>{errors.email}</p>
+              <p className='text-danger'>{errors.currentPassword}</p>
             </Form.Text>
           )}
         </Form.Group>

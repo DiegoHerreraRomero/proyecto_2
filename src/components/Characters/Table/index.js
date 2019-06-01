@@ -74,6 +74,7 @@ export default function CharactersTable (props) {
                 <th>Type</th>
                 <th>Gender</th>
                 <th>Image</th>
+                <th>Favorite</th>
               </tr>
             </thead>
             <tbody>

@@ -9,7 +9,7 @@ export default function PublicRoute ({ component: Component, ...rest }) {
     <Route
       {...rest}
       render={props => {
-        if (userLogged !== null) {
+        if (userLogged !== undefined && userLogged !== null) {
           return <Redirect to='/' />
         } else {
           return <Component {...props} />
