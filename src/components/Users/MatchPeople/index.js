@@ -26,7 +26,7 @@ export default function MacthPeople () {
                 })
                 if (coincidences.length > 0) {
                   return (
-                    <tr>
+                    <tr key={u.id}>
                       <td>{u.email}</td>
                       <td>{coincidences.join(', ')}</td>
                     </tr>

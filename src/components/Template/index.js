@@ -1,9 +1,12 @@
 import React, { useContext } from 'react'
-import { BrowserRouter as Router, Switch, Route, NavLink, Redirect } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, NavLink } from 'react-router-dom'
 import EpisodesTable from '../Episodes/Table'
 import CharactersTable from '../Characters/Table'
 import MatchPeople from '../Users/MatchPeople'
 import UserLogin from '../Users/Login'
+import UserRegister from '../Users/Register'
+import PrivateRoute from './PrivateRoute'
+import PublicRoute from './PublicRoute'
 import { Container, Nav, Navbar, NavDropdown } from 'react-bootstrap'
 import {
   UserContext,
@@ -22,15 +25,13 @@ function Template (props) {
 
   const SignOut = () => {
     dispatch(LogoutDispatch())
-    return (
-      <Redirect to='/login' />
-    )
+    return ''
   }
 
   return (
     <Router>
       <Navbar collapseOnSelect expand='lg' bg='dark' variant='dark'>
-        <Navbar.Brand href='#home'>React-Bootstrap</Navbar.Brand>
+        <Navbar.Brand href='#home'>R & M</Navbar.Brand>
         <Navbar.Toggle aria-controls='responsive-navbar-nav' />
         <Navbar.Collapse id='responsive-navbar-nav'>
           {userLogged !== null && (
@@ -67,11 +68,12 @@ function Template (props) {
       <Container>
         <Switch>
           <Route exact path='/' component={Homepage} />
-          <Route exact path='/episodes' component={EpisodesTable} />
-          <Route exact path='/characters' component={CharactersTable} />
-          <Route exact path='/match_people' component={MatchPeople} />
-          <Route exact path='/login' component={UserLogin} />
-          <Route exact path='/sign_out' component={SignOut} />
+          <PrivateRoute exact path='/episodes' component={EpisodesTable} />
+          <PrivateRoute exact path='/characters' component={CharactersTable} />
+          <PrivateRoute exact path='/match_people' component={MatchPeople} />
+          <PrivateRoute exact path='/sign_out' component={SignOut} />
+          <PublicRoute exact path='/login' component={UserLogin} />
+          <PublicRoute exact path='/register' component={UserRegister} />
         </Switch>
       </Container>
     </Router>

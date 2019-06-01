@@ -11,7 +11,7 @@ export default function CharactersTableRow (props) {
       <td>{gender}</td>
       <td>
         <div onClick={() => props.showImage(image)} title='Show image'>
-          <span role='img' aria-label='Show image'>&#127924;</span>
+          <span role='img' aria-label='Show image' className='h2'>&#127924;</span>
         </div>
       </td>
     </tr>

@@ -2,6 +2,7 @@ import React, { useReducer } from 'react'
 
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
+const REGISTER = 'REGISTER'
 const ADD_FAVORITE = 'ADD_FAVORITE'
 const REMOVE_FAVORITE = 'REMOVE_FAVORITE'
 
@@ -22,20 +23,29 @@ export const logout = () => {
   }
 }
 
-export const addFavorite = id => {
+export const register = (user) => {
   return {
-    type: ADD_FAVORITE,
+    type: REGISTER,
     payload: {
-      id
+      user
     }
   }
 }
 
-export const removeFavorite = id => {
+export const addFavorite = episode => {
+  return {
+    type: ADD_FAVORITE,
+    payload: {
+      episode
+    }
+  }
+}
+
+export const removeFavorite = episode => {
   return {
     type: REMOVE_FAVORITE,
     payload: {
-      id
+      episode
     }
   }
 }
@@ -60,8 +70,22 @@ let reducer = (state, action) => {
         ...state,
         userLogged: null
       }
+    case REGISTER:
+      const ids = users.map(u => u.id)
+      const newId = Math.max(...ids) + 1
+      let { user: newUser } = action.payload
+      newUser = {
+        ...newUser,
+        id: newId,
+        favoriteEpisodes: []
+      }
+      return {
+        ...state,
+        users: [...users, newUser],
+        userLogged: newUser
+      }
     case ADD_FAVORITE:
-      const newFav = [...userLogged.favoriteEpisodes, action.payload.id]
+      const newFav = [...userLogged.favoriteEpisodes, action.payload.episode]
       return {
         ...state,
         userLogged: {
@@ -73,14 +97,14 @@ let reducer = (state, action) => {
           if (user.id === userLogged.id) {
             userMod = {
               ...userMod,
-              favoritesEpisodes: newFav
+              favoriteEpisodes: newFav
             }
           }
           return userMod
         })
       }
     case REMOVE_FAVORITE:
-      const newNoFav = userLogged.favoriteEpisodes.filter(fe => fe !== action.payload.id)
+      const newNoFav = userLogged.favoriteEpisodes.filter(fe => fe !== action.payload.episode)
       console.log(newNoFav)
       return {
         ...state,
@@ -93,7 +117,7 @@ let reducer = (state, action) => {
           if (user.id === userLogged.id) {
             userMod = {
               ...userMod,
-              favoritesEpisodes: newNoFav
+              favoriteEpisodes: newNoFav
             }
           }
           return userMod
@@ -108,7 +132,7 @@ const initialState = {
   userLogged: null,
   users: [
     { id: 1, email: 'diegoh233@gmail.com', password: '12345', favoriteEpisodes: [] },
-    { id: 12, email: 'a@a.cl', password: '12345', favoriteEpisodes: [1, 3] }
+    { id: 2, email: 'a@a.cl', password: '12345', favoriteEpisodes: ['S01E01', 'S01E03'] }
   ]
 }
 
