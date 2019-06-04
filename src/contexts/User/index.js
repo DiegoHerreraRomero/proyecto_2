@@ -94,11 +94,11 @@ const getLocalStorage = () => {
   try {
     const serializedState = window.localStorage.getItem('state')
     if (serializedState === null) {
-      return undefined
+      return { userLogged: null, users: [] }
     }
     return JSON.parse(serializedState)
   } catch (err) {
-    return undefined
+    return { userLogged: null, users: [] }
   }
 }
 
